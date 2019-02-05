@@ -1,4 +1,15 @@
+// import modules
+var fs = require('fs');
+var md5 = require('md5');
+
 // create an array from the wordlist
+
+var wordList;
+var wordExp = /\w*'*\w/g;
+
+var contents = fs.readFileSync('test', 'utf8');
+wordList = contents.match(wordExp);
+console.log(wordList);
 
 // filter and remove from his array every entry that is not contained in original anagram
 

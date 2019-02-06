@@ -3,6 +3,8 @@ var fs = require('fs');
 var md5 = require('md5');
 var _ = require('lodash');
 
+var functions = require('./functions')
+
 // create an array from the wordlist
 
 var wordList;
@@ -19,19 +21,7 @@ console.log(wordList.length);
 const anagram = "abaft ab saback"
 // const anagram = "poultry outwits ants"
 
-const filteredWordList = wordList.filter(word => checkIfWordInAnagram(word, anagram));
-
-function checkIfWordInAnagram(word, anagram) {
-    var charactersRemaining = word.length
-    var i = charactersRemaining;
-    while (i--) {
-      var character = word.charAt(i);
-      if (anagram.includes(character) || character === "'") {
-        charactersRemaining--
-      }
-    }
-    return charactersRemaining === 0
-}
+const filteredWordList = functions.removeIncompatibleWords(anagram, wordList)
 
 console.log(filteredWordList.length);
 
@@ -40,9 +30,7 @@ var currentWord;
 var currentWordsArray = [];
 var arrayOfCombinations = []; // array containing arrays of every matching combinations
 
-function removeDuplicates(arrOfArr) {
- //
-}
+
 
 
 // remove spaces from anagram
@@ -58,79 +46,39 @@ console.log(trimmedAnagram)
 //     remove the word from wordList, and for word in remainingWordsArray, recursivelyLookForCombinations(word)
 
 function filterRemainingWordList(remainingAnagram, remainingWordList, currentWordsArray = []) {
-    if (remainingWordList.length <= 0) {
-        return
-    }
-    remainingWordList.forEach(word => {
-        var currWord = word
-        var remainingAnagramCopy = (' ' + remainingAnagram).slice(1);
-        var remainingWordListClone = filteredWordList.slice(0);
-        var currentWordsArrayClone = currentWordsArray.slice(0);
-        //remove from anagram and add to currentWordsArray
-        if (checkIfWordInAnagram(currWord, remainingAnagramCopy)) {
-            remainingAnagramCopy = removeWordFromAnagram(remainingAnagramCopy, currWord)
-            currentWordsArrayClone.push(currWord)
-            currentWordsArrayClone.sort()
-        } else {
-            // console.log('no match in array')
-            return
-        }
-        // remove currWord from WordListClone
-        remainingWordListClone = removeWordFromArray(remainingWordListClone, currWord)
-        if (remainingAnagramCopy === '') {
-            // return currentWordsArrayClone
-            if (!deepLook(arrayOfCombinations, currentWordsArrayClone)) {
-                // console.log("match in array")
-                // console.log(currentWordsArrayClone)
-                arrayOfCombinations.push(currentWordsArrayClone)
+    // if (remainingWordList.length <= 0) {
+    //     return
+    // }
+    // remainingWordList.forEach(word => {
+    //     var currWord = word
+    //     var remainingAnagramCopy = (' ' + remainingAnagram).slice(1);
+    //     var remainingWordListClone = filteredWordList.slice(0);
+    //     var currentWordsArrayClone = currentWordsArray.slice(0);
+    //     //remove from anagram and add to currentWordsArray
+    //     if (functions.checkIfWordInAnagram(currWord, remainingAnagramCopy)) {
+    //         remainingAnagramCopy = functions.removeWordFromAnagram(remainingAnagramCopy, currWord)
+    //         currentWordsArrayClone.push(currWord)
+    //         currentWordsArrayClone.sort()
+    //     } else {
+    //         // console.log('no match in array')
+    //         return
+    //     }
+    //     // remove currWord from WordListClone
+    //     remainingWordListClone = functions.removeWordFromArray(remainingWordListClone, currWord)
+    //     if (remainingAnagramCopy === '') {
+    //         // return currentWordsArrayClone
+    //         if (!functions.deepLook(arrayOfCombinations, currentWordsArrayClone)) {
+    //             // console.log("match in array")
+    //             // console.log(currentWordsArrayClone)
+    //             arrayOfCombinations.push(currentWordsArrayClone)
                 
-            }
-        }
-        filterRemainingWordList(remainingAnagramCopy, remainingWordListClone, currentWordsArrayClone)
-    })
+    //         }
+    //     }
+    //     filterRemainingWordList(remainingAnagramCopy, remainingWordListClone, currentWordsArrayClone)
+    // })
 }
 
 filterRemainingWordList(trimmedAnagram, filteredWordList)
-
-
-function removeWordFromAnagram(anagram, word) {
-    var anagramCopy = (' ' + anagram).slice(1);
-    var i = word.length;
-    while (i--) {
-      var character = word.charAt(i);
-      if (anagramCopy.includes(character)) {
-         anagramCopy = anagramCopy.replace(character,'');
-      }
-    }
-    return anagramCopy
-}
-
-function removeWordFromArray(arr) { //  Usage : removeWordFromArray(array, element1, [element2, [...]]);
-    var what, a = arguments, L = a.length, ax;
-    while (L > 1 && arr.length) {
-        what = a[--L];
-        // console.log(`remove ${what} from array`)
-        while ((ax= arr.indexOf(what)) !== -1) {
-            arr.splice(ax, 1);
-        }
-    }
-    return arr;
-}
-
-function deepLook(arrOfArr, arr){
-    var length = arr.length
-    var count = 0
-    var result = false
-    arrOfArr.forEach(elm => {
-        elm.forEach((item, i) => {
-            if (item === arr[i]) {
-                count++
-            }
-            if (count === length) result = true
-        })
-    })
-    return result
-}
 
 function printResults() {
     console.log("arrayOfCombinations:")

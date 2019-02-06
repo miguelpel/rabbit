@@ -1,12 +1,13 @@
 var fs = require('fs');
 var functions = require('./functions')
+var _ = require('lodash')
 
 var wordList;
 var wordExp = /\w*'*\w/g;
 
 var contents = fs.readFileSync('wordlist', 'utf8');
 // var contents = fs.readFileSync('test', 'utf8');
-wordList = contents.match(wordExp);
+wordList = _.uniq(contents.match(wordExp));
 console.log(wordList.length);
 
 // const anagram = "abaft ab saback"
@@ -14,7 +15,10 @@ const anagram = "poultry outwits ants"
 
 const trimmedAnagram = anagram.replace(/\s+/g, '')
 
-const filteredWordList = functions.removeIncompatibleWords(trimmedAnagram, wordList)
+// const orderedTrimmedanagram = trimmedAnagram.sort()
+
+// console.log(orderedTrimmedanagram)
+const filteredWordList = functions.removeIncompatibleWords(trimmedAnagram, wordList);
 
 console.log(filteredWordList.length)
 
@@ -22,32 +26,52 @@ console.log(filteredWordList.length)
 
 // function test1()
 
-function sieve1(wordList) {
-    var emptyAnagram = 0
+function sifter1(wordList, anagram) {
+    var emptyArray = 0
     var wordswithFollowUp = []
     wordList.forEach(word => {
         var wordlist = functions.removeWordFromArray(wordList, word)
-        var anagr = functions.removeWordFromAnagram(trimmedAnagram, word)
+        var anagr = functions.removeWordFromAnagram(anagram, word)
         if (anagr) {
             if (anagr.length === 0) {
-                return word
-                // emptyAnagram++
+                emptyArray ++
+                // return word
             } else {
                 wordlist = functions.removeIncompatibleWords(anagr, wordlist)
                 if (wordlist) {
                     wordswithFollowUp.push(word)
-                    // console.log(wordlist.length)
                 }
             }
         }
     })
+    console.log("emptyArray:")
+    console.log(emptyArray)
+    console.log("words with follow Up:")
+    console.log(wordswithFollowUp.length)
     return wordswithFollowUp
 }
 
-var wordswithFollowUp = sieve1(filteredWordList)
-console.log("words with follow Up:")
-console.log(wordswithFollowUp.length)
+var firstSifterResults = sifter1(filteredWordList, trimmedAnagram)
+console.log(firstSifterResults[0])
+console.log(firstSifterResults[1])
+// firstSifterResults.forEach(word => {
+//     sifter2(word, firstSifterResults, trimmedAnagram)
+// })
+// var secondSifterResults = sifter2(firstSifterResults, trimmedAnagram)
+// console.log('second stifer results :')
+// console.log(secondSifterResults.length)
 
+// function sifter2(word, wordList, anagram) {
+//     // var words = []
+//     var word1 = word
+//     console.log(word1)
+//     // words.push(word1)
+//     var restOfTheWordList = functions.removeWordFromArray(wordList, word1)
+//     var restOfAnagram = functions.removeWordFromAnagram(anagram, word1)
+//     var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
+//     return restWithFollowUp
+
+// }
 
 
 // test1(filteredWordList)

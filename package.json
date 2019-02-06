@@ -13,6 +13,10 @@
   "author": "MiguelPel",
   "license": "ISC",
   "devDependencies": {
-    "md5": "^2.2.1"
+    "md5": "^2.2.1",
+    "underscore": "^1.9.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
   }
 }

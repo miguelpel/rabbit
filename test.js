@@ -28,6 +28,41 @@ console.log(filteredWordList.length)
 
 var wordsWithMatches = []
 
+var firstSifterResults = sifter1(filteredWordList, trimmedAnagram)
+console.log(firstSifterResults.length)
+
+
+if (!fs.existsSync("./resultstest")) {
+    console.log("file doesn't exists")
+    firstSifterResults.forEach(word => {
+        sifter2(word, firstSifterResults, trimmedAnagram)
+    })
+
+    console.log('words with matches:')
+    console.log(wordsWithMatches)
+    var wordsMatchedWithoutDoubles = functions.removeDoubles(wordsWithMatches)
+    console.log('filtered words with matches:')
+    console.log(wordsMatchedWithoutDoubles)
+    wordsMatchedWithoutDoubles.forEach(word => {
+        try {
+            fs.appendFileSync("./resultstest", word + '\n');
+          } catch (err) {
+            console.log(err.message)
+          }
+    })
+} else {
+    console.log("file exists")
+    var contents = fs.readFileSync("./resultstest", 'utf8');
+    // var contents = fs.readFileSync('test', 'utf8');
+    reducedWordList = contents.match(wordExp);
+    // console.log(reducedWordList)
+    reducedWordList.forEach(word => {
+        console.log(word)
+        getAllMatches(word)
+    })
+}
+
+
 function sifter1(wordList, anagram) {
     var wordswithFollowUp = []
     wordList.forEach(word => {
@@ -35,8 +70,7 @@ function sifter1(wordList, anagram) {
         var anagr = functions.removeWordFromAnagram(anagram, word)
         if (typeof anagr === "string") {
             if (anagr.length === 0) {
-                wordsWithMatches.push(word)
-                return false
+                return word
             } else {
                 wordlist = functions.removeIncompatibleWords(anagr, wordlist)
                 if (wordlist) {
@@ -52,32 +86,13 @@ function sifter1(wordList, anagram) {
     return wordswithFollowUp
 }
 
-var firstSifterResults = sifter1(filteredWordList, trimmedAnagram)
-console.log(firstSifterResults.length)
-
-// firstSifterResults.forEach(word => {
-//     sifter2(word, firstSifterResults, trimmedAnagram)
-// })
-
-console.log('words with matches:')
-console.log(wordsWithMatches)
-var wordsMatchedWithoutDoubles = functions.removeDoubles(wordsWithMatches)
-console.log('filtered words with matches:')
-console.log(wordsMatchedWithoutDoubles)
-
-wordsMatchedWithoutDoubles.forEach(word => {
-    try {
-        fs.appendFileSync("./resultstest", word + '\n');
-      } catch (err) {
-        console.log(err.message)
-      }
-})
-
-
 function sifter2(word, wordList, anagram) {
     var restOfTheWordList = functions.removeWordFromArray(wordList, word)
     var restOfAnagram = functions.removeWordFromAnagram(anagram, word)
     var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
+    if (typeof restWithFollowUp === "string") {
+        wordsWithMatches.push(word)
+    }
     if (restWithFollowUp && restWithFollowUp.length > 0) {
         sifter2(restWithFollowUp[0], restWithFollowUp, restOfAnagram)
     } else {
@@ -85,3 +100,12 @@ function sifter2(word, wordList, anagram) {
     }
 }
 
+function getAllMatches(word) {
+    var restOfTheWordList = functions.removeWordFromArray(firstSifterResults, word)
+    var restOfAnagram = functions.removeWordFromAnagram(trimmedAnagram, word)
+    var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
+    console.log('rest of anagram:')
+    console.log(restOfAnagram)
+    console.log("rest of possibilities:")
+    console.log(restWithFollowUp.length)
+}

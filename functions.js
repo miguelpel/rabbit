@@ -14,12 +14,19 @@ module.exports.deepLook = (arrOfArr, arr) => {
 }
 
 module.exports.removeWordFromAnagram = (anagram, word) => {
+    if (!anagram) return false;
+    if (!word) return false;
+    if (word.length > anagram.length) return false
     var anagramCopy = (' ' + anagram).slice(1);
+    // console.log(anagramCopy)
     var i = word.length;
     while (i--) {
       var character = word.charAt(i);
+    //   console.log(character)
       if (anagramCopy.includes(character)) {
          anagramCopy = anagramCopy.replace(character,'');
+      } else if (character === "'") {
+        continue
       } else {
           return false
       }
@@ -39,6 +46,13 @@ module.exports.removeIncompatibleWords = (anagram, wordList) => {
     if (resultArr.length > 0) return resultArr
     return false
 }
+
+module.exports.removeDoubles = (arr) => {
+    let x = (arr) => arr.filter((v,i) => arr.indexOf(v) === i)
+    let result = x(arr);
+    return result
+}
+
 
 function checkIfWordInAnagram(word, anagram) {
     var charactersRemaining = word.length

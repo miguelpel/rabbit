@@ -17,88 +17,71 @@ const trimmedAnagram = anagram.replace(/\s+/g, '')
 
 // const orderedTrimmedanagram = trimmedAnagram.sort()
 
-// console.log(orderedTrimmedanagram)
+console.log(trimmedAnagram)
 const filteredWordList = functions.removeIncompatibleWords(trimmedAnagram, wordList);
 
 console.log(filteredWordList.length)
 
-// remove all words that have zero results AND anagram !== ''
+// remove all words that have zero results
 
 // function test1()
 
+var wordsWithMatches = []
+
 function sifter1(wordList, anagram) {
-    var emptyArray = 0
     var wordswithFollowUp = []
     wordList.forEach(word => {
         var wordlist = functions.removeWordFromArray(wordList, word)
         var anagr = functions.removeWordFromAnagram(anagram, word)
-        if (anagr) {
+        if (typeof anagr === "string") {
             if (anagr.length === 0) {
-                emptyArray ++
-                // return word
+                wordsWithMatches.push(word)
+                return false
             } else {
                 wordlist = functions.removeIncompatibleWords(anagr, wordlist)
                 if (wordlist) {
                     wordswithFollowUp.push(word)
+                } else {
+                    return false
                 }
             }
         }
     })
-    console.log("emptyArray:")
-    console.log(emptyArray)
-    console.log("words with follow Up:")
+    // console.log("words with follow Up:")
     console.log(wordswithFollowUp.length)
     return wordswithFollowUp
 }
 
 var firstSifterResults = sifter1(filteredWordList, trimmedAnagram)
-console.log(firstSifterResults[0])
-console.log(firstSifterResults[1])
+console.log(firstSifterResults.length)
+
 // firstSifterResults.forEach(word => {
 //     sifter2(word, firstSifterResults, trimmedAnagram)
 // })
-// var secondSifterResults = sifter2(firstSifterResults, trimmedAnagram)
-// console.log('second stifer results :')
-// console.log(secondSifterResults.length)
 
-// function sifter2(word, wordList, anagram) {
-//     // var words = []
-//     var word1 = word
-//     console.log(word1)
-//     // words.push(word1)
-//     var restOfTheWordList = functions.removeWordFromArray(wordList, word1)
-//     var restOfAnagram = functions.removeWordFromAnagram(anagram, word1)
-//     var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
-//     return restWithFollowUp
+console.log('words with matches:')
+console.log(wordsWithMatches)
+var wordsMatchedWithoutDoubles = functions.removeDoubles(wordsWithMatches)
+console.log('filtered words with matches:')
+console.log(wordsMatchedWithoutDoubles)
 
-// }
-
-
-// test1(filteredWordList)
-
-// const word = 'poultryoutwitsants'
-
-// console.log(word)
+wordsMatchedWithoutDoubles.forEach(word => {
+    try {
+        fs.appendFileSync("./resultstest", word + '\n');
+      } catch (err) {
+        console.log(err.message)
+      }
+})
 
 
-// var anagr = functions.removeWordFromAnagram(trimmedAnagram, word)
-// console.log(anagr.length)
+function sifter2(word, wordList, anagram) {
+    var restOfTheWordList = functions.removeWordFromArray(wordList, word)
+    var restOfAnagram = functions.removeWordFromAnagram(anagram, word)
+    var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
+    if (restWithFollowUp && restWithFollowUp.length > 0) {
+        sifter2(restWithFollowUp[0], restWithFollowUp, restOfAnagram)
+    } else {
+        return
+    }
+}
 
-// console.log(trimmedAnagram)
-
-// var wordlist = functions.removeWordFromArray(filteredWordList, word)
-// console.log(wordlist.length)
-// var anagr = functions.removeWordFromAnagram(trimmedAnagram, word)
-// console.log(anagr)
-// if anagr empty, anagr.length === 0
-// if (anagr) {
-//     wordlist = functions.removeIncompatibleWords(anagr, wordlist)
-//     if (wordlist) {
-//         console.log(wordlist.length)
-//     }
-// }
-
-
-// remove all words that have zero results
-
-// var result = Array.from(new Set(arr.map(JSON.stringify)), JSON.parse)

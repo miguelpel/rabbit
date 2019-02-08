@@ -26,11 +26,9 @@ console.log(filteredWordList.length)
 
 // function test1()
 
-var wordsWithMatches = []
-
 var firstSifterResults = sifter1(filteredWordList, trimmedAnagram)
 console.log(firstSifterResults.length)
-
+var wordsWithMatches = []
 
 if (!fs.existsSync("./resultstest")) {
     console.log("file doesn't exists")
@@ -86,26 +84,28 @@ function sifter1(wordList, anagram) {
     return wordswithFollowUp
 }
 
-function sifter2(word, wordList, anagram) {
-    var restOfTheWordList = functions.removeWordFromArray(wordList, word)
-    var restOfAnagram = functions.removeWordFromAnagram(anagram, word)
-    var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
-    if (typeof restWithFollowUp === "string") {
-        wordsWithMatches.push(word)
-    }
-    if (restWithFollowUp && restWithFollowUp.length > 0) {
-        sifter2(restWithFollowUp[0], restWithFollowUp, restOfAnagram)
-    } else {
-        return
-    }
-}
+// DON'T WORK
+// function sifter2(word, wordList, anagram) {
+//     var restOfTheWordList = functions.removeWordFromArray(wordList, word)
+//     var restOfAnagram = functions.removeWordFromAnagram(anagram, word)
+//     var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
+//     if (typeof restWithFollowUp === "string") {
+//         wordsWithMatches.push(word)
+//     }
+//     if (restWithFollowUp && restWithFollowUp.length > 0) {
+//         sifter2(restWithFollowUp[0], restWithFollowUp, restOfAnagram)
+//     } else {
+//         return
+//     }
+// }
 
-function getAllMatches(word) {
-    var restOfTheWordList = functions.removeWordFromArray(firstSifterResults, word)
-    var restOfAnagram = functions.removeWordFromAnagram(trimmedAnagram, word)
-    var restWithFollowUp = sifter1(restOfTheWordList, restOfAnagram)
-    console.log('rest of anagram:')
-    console.log(restOfAnagram)
-    console.log("rest of possibilities:")
-    console.log(restWithFollowUp.length)
-}
+
+
+// may return false, or an array of arrays of words
+function getAllMatches(word, anagram, wordList) {
+    }
+
+    // sifter1 takes an array of words and an anagram, and returns:
+    // either an array of words, => add the current word to combination
+    // either a word => add the combination to combinations
+    // either false => reset the combination

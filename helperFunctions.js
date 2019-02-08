@@ -11,7 +11,11 @@ function checkIfWordInAnagram(word, anagram) {
     var i = charactersRemaining;
     while (i--) {
       var character = word.charAt(i);
-      if (anagram.includes(character) || character === "'") {
+      if (character === "'") {
+        charactersRemaining--
+      } else if (anagram.includes(character)) {
+        let idx = anagram.indexOf(character)
+        anagram = anagram.slice(0, idx) + anagram.slice(idx+1)
         charactersRemaining--
       }
     }
@@ -48,7 +52,8 @@ module.exports.removeWordFromArray = (arr, word) => {
 module.exports.removeWordFromAnagram = (anagram, word) => {
     if (!anagram) return false;
     if (!word) return false;
-    if (word.length > anagram.length) return false
+    // word = 
+    // if (word.length > anagram.length) return false
     var anagramCopy = (' ' + anagram).slice(1);
     // console.log(anagramCopy)
     var i = word.length;
@@ -64,6 +69,12 @@ module.exports.removeWordFromAnagram = (anagram, word) => {
       }
     }
     return anagramCopy
+}
+
+module.exports.removeDoubles = (arr) => {
+    let x = (arr) => arr.filter((v,i) => arr.indexOf(v) === i)
+    let result = x(arr);
+    return result
 }
 
 // do we need this ?

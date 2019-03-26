@@ -1,5 +1,5 @@
 const fs = require('fs');
-const helperFunctions = require('./helperFunctions')
+const helperFunctions = require('../helperFunctions')
 const _ = require('lodash')
 
 const anagram = "poultry outwits ants"

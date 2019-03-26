@@ -1,5 +1,5 @@
 const fs = require('fs');
-const helperFunctions = require('./helperFunctions')
+const helperFunctions = require('../helperFunctions')
 const md5 = require('md5');
 
 let lineReader
